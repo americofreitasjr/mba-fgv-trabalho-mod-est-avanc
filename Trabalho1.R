@@ -37,9 +37,9 @@ for (i in (1:ncol(dados_temp))) {
 
 #Listando variáveis com mais de 20 níveis
 variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
-names(variaveis) = c("Coluna","Classe","Níveis")
+names(variaveis) = c("Coluna","Classe","Niveis")
 variaveis_explicativas = variaveis[-379,]
-ind = variaveis_explicativas$Níveis > 20
+ind = variaveis_explicativas$Niveis > 20
 variaveis_explicativas = data.frame(variaveis_explicativas,ind)
 
 variaveis_modelo = variaveis_explicativas[ind==TRUE,]

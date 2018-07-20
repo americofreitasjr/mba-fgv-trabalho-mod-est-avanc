@@ -67,14 +67,14 @@ for (i in (1:ncol(dados_temp))) {
 
 ```{r}
 variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
-names(variaveis) = c("Coluna","Classe","Níveis")
+names(variaveis) = c("Coluna","Classe","Niveis")
 variaveis_explicativas = variaveis[-379,]
-ind = variaveis_explicativas$Níveis > 20
+ind = variaveis_explicativas$Niveis > 20
 variaveis_explicativas = data.frame(variaveis_explicativas,ind)
 
 variaveis_modelo = variaveis_explicativas[ind==TRUE,]
 x = paste(variaveis_modelo[-1,1],collapse="'+'")
-write.table(x,"E:/MBA FGV/Modelagem Estatística Avançada/Teste.txt")
+write.table(x,"output/Teste.txt")
 
 cols_1<-c('AG_AGR_TRAC_NO','AG_LND_AGRI_K2','AG_LND_AGRI_ZS','AG_LND_ARBL_HA','AG_LND_ARBL_HA_PC','AG_LND_ARBL_ZS','AG_LND_CREL_HA','AG_LND_CROP_ZS','AG_LND_FRST_K2','AG_LND_FRST_ZS')
 cols_2<-c('AG_LND_TRAC_ZS','AG_PRD_CREL_MT','AG_PRD_CROP_XD','AG_PRD_FOOD_XD','AG_PRD_LVSK_XD','AG_YLD_CREL_KG','BM_TRF_PWKR_CD_DT','BN_TRF_CURR_CD','BX_GRT_EXTA_CD_WD','BX_GRT_TECH_CD_WD','BX_KLT_DINV_CD_WD','BX_KLT_DINV_WD_GD_ZS','BX_KLT_DREM_CD_DT','BX_PEF_TOTL_CD_WD','BX_TRF_PWKR_CD_DT','BX_TRF_PWKR_DT_GD_ZS','CM_MKT_LCAP_CD','CM_MKT_LCAP_GD_ZS','CM_MKT_LDOM_NO','CM_MKT_TRAD_CD','CM_MKT_TRAD_GD_ZS','CM_MKT_TRNR','DC_DAC_AUTL_CD','DC_DAC_BELL_CD','DC_DAC_CANL_CD','DC_DAC_CECL_CD','DC_DAC_CHEL_CD','DC_DAC_DEUL_CD','DC_DAC_DNKL_CD','DC_DAC_ESPL_CD','DC_DAC_FINL_CD','DC_DAC_FRAL_CD','DC_DAC_GBRL_CD','DC_DAC_IRLL_CD','DC_DAC_ITAL_CD','DC_DAC_JPNL_CD','DC_DAC_LUXL_CD','DC_DAC_NLDL_CD','DC_DAC_NORL_CD','DC_DAC_PRTL_CD','DC_DAC_SWEL_CD','DC_DAC_TOTL_CD','DC_DAC_USAL_CD','DT_AMT_BLAT_CD','DT_AMT_BLTC_CD','DT_AMT_DIMF_CD','DT_AMT_DLTF_CD','DT_AMT_DLXF_CD','DT_AMT_DPNG_CD','DT_AMT_DPPG_CD','DT_AMT_MIBR_CD','DT_AMT_MLAT_CD','DT_AMT_MLTC_CD','DT_AMT_OFFT_CD','DT_AMT_PBND_CD','DT_AMT_PCBK_CD','DT_AMT_PNGB_CD','DT_AMT_PNGC_CD','DT_AMT_PROP_CD','DT_AMT_PRVT_CD','DT_AXA_DPPG_CD','DT_AXA_OFFT_CD','DT_AXA_PRVT_CD','DT_AXR_DPPG_CD','DT_AXR_PRVT_CD','DT_COM_DPPG_CD','DT_COM_MIBR_CD','DT_COM_OFFT_CD','DT_COM_PRVT_CD','DT_CUR_DMAK_ZS','DT_CUR_FFRC_ZS','DT_CUR_JYEN_ZS','DT_CUR_MULC_ZS')
