@@ -1,25 +1,52 @@
-###Carregando os dados
-setwd("E:/MBA FGV/Modelagem EstatÃ­stica AvanÃ§ada")
-install.packages("readxl")
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+# Carregando as bibliotecas necessárias para a análise do modelo
+#install.packages("readxl")
 library(readxl)
+#install.packages("factoextra")
+library(factoextra)
+#install.packages("bindrcpp")
+library(bindrcpp)
+
+```
+
+###Carregando os dados
+
+
+```{r}
+#setwd("E:/MBA FGV/Modelagem Estatística Avançada")
+setwd("D:/OneDrive/Documentos/GOOGLE-DRIVE/MBA/08 - Modelagem Estatística Avançada/emissao_co2")
 dados = read_xlsx("Dados_trabalho_1.xlsx")
 dados = data.frame(dados)
 
-###Carregando tabela de referÃªncia das variÃ¡veis
-dados_dictionary = read_xlsx("ReferÃªncia_variaveis.xlsx")
+```
+
+###Carregando tabela de referência das variáveis
+```{r}
+dados_dictionary = read_xlsx("Referência_variaveis.xlsx")
 dados_dictionary = data.frame(dados_dictionary)
+```
+
 
 #Como a base tinha muitos registros vazios, decidimos substituir os NAs por zero para facilitar a modelagem.
 
 #Transformando NAs em zero
+```{r}
 dados_sem_na <- dados[-1]
 dados_sem_na[is.na(dados_sem_na)] <- 0
+```
+#Na primeira tentativa de rodar um modelo linear com os dados, recebemos como resultado o erro de que havia variáveis com singularidades, o que não era permitido pelo modelo.
+#Pesquisando, vimos que esse ocorre quando há variáveis explicativas que tem poucos valores únicos, e consequentemente pouca variabilidade.
+#Por esse motivo, decidimos selecionar variáveis a partir de um critério de quantidade de valores únicos: variáveis com mais de 20 valores únicos.
 
-#Na primeira tentativa de rodar um modelo linear com os dados, recebemos como resultado o erro de que havia variÃ¡veis com singularidades, o que nÃ£o era permitido pelo modelo.
-#Pesquisando, vimos que esse ocorre quando hÃ¡ variÃ¡veis explicativas que tem poucos valores Ãºnicos, e consequentemente pouca variabilidade.
-#Por esse motivo, decidimos selecionar variÃ¡veis a partir de um critÃ©rio de quantidade de valores Ãºnicos: variÃ¡veis com mais de 20 valores Ãºnicos.
+#Analisando a qtd de níveis das variáveis
 
-#Analisando a qtd de nÃ­veis das variÃ¡veis
+```{r}
 dados_temp = data.frame(rep(NA,nrow(dados)))
 for (i in (1:ncol(dados))) {
   dados_temp[,i] <- factor(dados[,i])
@@ -34,17 +61,20 @@ niveis_variaveis = NULL
 for (i in (1:ncol(dados_temp))) {
   niveis_variaveis[i] <- length(levels(dados_temp[,i]))
 }
+```
 
-#Listando variÃ¡veis com mais de 20 nÃ­veis
+#Listando variáveis com mais de 20 níveis
+
+```{r}
 variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
-names(variaveis) = c("Coluna","Classe","NÃ­veis")
+names(variaveis) = c("Coluna","Classe","Níveis")
 variaveis_explicativas = variaveis[-379,]
-ind = variaveis_explicativas$NÃ­veis > 20
+ind = variaveis_explicativas$Níveis > 20
 variaveis_explicativas = data.frame(variaveis_explicativas,ind)
 
 variaveis_modelo = variaveis_explicativas[ind==TRUE,]
 x = paste(variaveis_modelo[-1,1],collapse="'+'")
-write.table(x,"E:/MBA FGV/Modelagem EstatÃ­stica AvanÃ§ada/Teste.txt")
+write.table(x,"E:/MBA FGV/Modelagem Estatística Avançada/Teste.txt")
 
 cols_1<-c('AG_AGR_TRAC_NO','AG_LND_AGRI_K2','AG_LND_AGRI_ZS','AG_LND_ARBL_HA','AG_LND_ARBL_HA_PC','AG_LND_ARBL_ZS','AG_LND_CREL_HA','AG_LND_CROP_ZS','AG_LND_FRST_K2','AG_LND_FRST_ZS')
 cols_2<-c('AG_LND_TRAC_ZS','AG_PRD_CREL_MT','AG_PRD_CROP_XD','AG_PRD_FOOD_XD','AG_PRD_LVSK_XD','AG_YLD_CREL_KG','BM_TRF_PWKR_CD_DT','BN_TRF_CURR_CD','BX_GRT_EXTA_CD_WD','BX_GRT_TECH_CD_WD','BX_KLT_DINV_CD_WD','BX_KLT_DINV_WD_GD_ZS','BX_KLT_DREM_CD_DT','BX_PEF_TOTL_CD_WD','BX_TRF_PWKR_CD_DT','BX_TRF_PWKR_DT_GD_ZS','CM_MKT_LCAP_CD','CM_MKT_LCAP_GD_ZS','CM_MKT_LDOM_NO','CM_MKT_TRAD_CD','CM_MKT_TRAD_GD_ZS','CM_MKT_TRNR','DC_DAC_AUTL_CD','DC_DAC_BELL_CD','DC_DAC_CANL_CD','DC_DAC_CECL_CD','DC_DAC_CHEL_CD','DC_DAC_DEUL_CD','DC_DAC_DNKL_CD','DC_DAC_ESPL_CD','DC_DAC_FINL_CD','DC_DAC_FRAL_CD','DC_DAC_GBRL_CD','DC_DAC_IRLL_CD','DC_DAC_ITAL_CD','DC_DAC_JPNL_CD','DC_DAC_LUXL_CD','DC_DAC_NLDL_CD','DC_DAC_NORL_CD','DC_DAC_PRTL_CD','DC_DAC_SWEL_CD','DC_DAC_TOTL_CD','DC_DAC_USAL_CD','DT_AMT_BLAT_CD','DT_AMT_BLTC_CD','DT_AMT_DIMF_CD','DT_AMT_DLTF_CD','DT_AMT_DLXF_CD','DT_AMT_DPNG_CD','DT_AMT_DPPG_CD','DT_AMT_MIBR_CD','DT_AMT_MLAT_CD','DT_AMT_MLTC_CD','DT_AMT_OFFT_CD','DT_AMT_PBND_CD','DT_AMT_PCBK_CD','DT_AMT_PNGB_CD','DT_AMT_PNGC_CD','DT_AMT_PROP_CD','DT_AMT_PRVT_CD','DT_AXA_DPPG_CD','DT_AXA_OFFT_CD','DT_AXA_PRVT_CD','DT_AXR_DPPG_CD','DT_AXR_PRVT_CD','DT_COM_DPPG_CD','DT_COM_MIBR_CD','DT_COM_OFFT_CD','DT_COM_PRVT_CD','DT_CUR_DMAK_ZS','DT_CUR_FFRC_ZS','DT_CUR_JYEN_ZS','DT_CUR_MULC_ZS')
@@ -62,54 +92,68 @@ cols<- c(cols_1,cols_2,cols_3,cols_4,cols_5,cols_6,cols_7,cols_8,cols_9,cols_10,
 dados_relevantes_total <- cbind(dados[1],dados_sem_na[,cols])
 dados_relevantes <- dados_sem_na[,cols]
 
-#Com esse mÃ©todo, ficamos com 721 variÃ¡veis explicativas passÃ­veis de entrar no modelo, e o modelo linear passou a rodar.
-#No entanto, no summary do modelo vimos que boa parte das variÃ¡veis explicativas ficaram com NA em parÃ¢metro estimado, Desvio PadrÃ£o e Teste t.
-#Por esse motivo, decidimos avanÃ§ar com uma abordagem mais sofisticada para reduÃ§Ã£o de dimensionalidade.
-#A tÃ©cnica escolhida foi a AnÃ¡lise de Componentes Principais. Este mÃ©todo agrupa variÃ¡veis a partir de sua covariÃ¢ncias, gerando combinaÃ§Ãµes lineares das variÃ¡veis, que se chamam Componentes Principais.
+```
 
-#AnÃ¡lise de componentes principais
+#Com esse método, ficamos com 721 variáveis explicativas passíveis de entrar no modelo, e o modelo linear passou a rodar.
+#No entanto, no summary do modelo vimos que boa parte das variáveis explicativas ficaram com NA em parâmetro estimado, Desvio Padrão e Teste t.
+#Por esse motivo, decidimos avançar com uma abordagem mais sofisticada para redução de dimensionalidade.
+#A técnica escolhida foi a Análise de Componentes Principais. Este método agrupa variáveis a partir de sua covariâncias, gerando combinações lineares das variáveis, que se chamam Componentes Principais.
+
+#Análise de componentes principais
+
+```{r}
 acomp <- prcomp(dados_relevantes, scale = TRUE)
 summary(acomp)
+```
 
 #Interpretando os componentes principais
 #http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/
-install.packages("factoextra")
-library(factoextra)
-install.packages("bindrcpp")
-library(bindrcpp)
 
-#VisualizaÃ§Ã£o do percentual de variÃ¢ncia explicada por cada Componente
+#Visualização do percentual de variância explicada por cada Componente
+
+```{r}
 fviz_eig(acomp)
+```
 
-#VisualizaÃ§Ã£o do grau de associaÃ§Ã£o de cada registro com os primeiros dois Componentes
-#Como cada registro Ã© de um ano, o registro 1 representa o ano 1960 e consecutivamente atÃ© o resgistro 56, que representa o ano 2005.
+#Visualização do grau de associação de cada registro com os primeiros dois Componentes
+#Como cada registro é de um ano, o registro 1 representa o ano 1960 e consecutivamente até o resgistro 56, que representa o ano 2005.
+```{r}
 fviz_pca_ind(acomp,
              col.ind = "cos2", # Color by the quality of representation
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
              repel = TRUE     # Avoid text overlapping
 )
+```
 
-#Entendendo a relaÃ§Ã£o das variÃ¡veis iniciais com os Componentes
+#Entendendo a relação das variáveis iniciais com os Componentes
+```{r}
 res.var <- get_pca_var(acomp)
 res.var$coord          # Coordenadas
-res.var$contrib        # ContribuiÃ§Ãµes para os Componentes Principais
+res.var$contrib        # Contribuições para os Componentes Principais
+```
 
-#Entendendo a relaÃ§Ã£o dos registros com os Componentes
+#Entendendo a relação dos registros com os Componentes
+```{r}
 res.ind <- get_pca_ind(acomp)
 res.ind$coord          # Coordenadas
-res.ind$contrib        # ContribuiÃ§Ãµes para os Componentes Principais
+res.ind$contrib        # Contribuições para os Componentes Principais
+```
 
-#Modelo Linear com a variÃ¡vel EmissÃµes de CO2 explicada pelas componentes principais
+#Modelo Linear com a variável Emissões de CO2 explicada pelas componentes principais
+```{r}
 componentes <- data.frame(dados_sem_na$EN_ATM_CO2E_KT,acomp$x)
 nomes <- NULL
 for (i in 1:(ncol(componentes)-1)) {nomes[i] <- paste0("PC",i)}
 names(componentes) = c("EN_ATM_CO2E_KT",nomes)
 
+
 mod=lm(EN_ATM_CO2E_KT ~ PC1+PC2+PC4+PC5+PC7+PC9+PC10+PC13, data = componentes)
 summary(mod)
+```
 
-#AnÃ¡lise de resÃ­duos
-#Podemos ver que os resÃ­duos se encontram aleatoriamente distribuidos em relaÃ§Ã£o Ã  variÃ¡vel resposta e tambÃ©m Ã s variÃ¡veis explicativas
+#Análise de resíduos
+#Podemos ver que os resíduos se encontram aleatoriamente distribuidos em relação à variável resposta e também às variáveis explicativas
+```{r}
 anares<-rstandard(mod)
 par(mfrow=c(1,1))
 plot(componentes$PC1, anares);abline(0,0)
@@ -120,9 +164,13 @@ plot(componentes$PC7, anares);abline(0,0)
 plot(componentes$PC9, anares);abline(0,0)
 plot(componentes$PC10, anares);abline(0,0)
 plot(componentes$PC13, anares);abline(0,0)
+```
 
-#TambÃ©m Ã© possÃ­vel ver que os resÃ­duos atendem ao pressuposto de normalidade
+#Também é possível ver que os resíduos atendem ao pressuposto de normalidade
+
+```{r}
 plot(componentes$EN_ATM_CO2E_KT, anares)
 abline(0,0)
 qqnorm(anares)
 qqline(anares)
+```
