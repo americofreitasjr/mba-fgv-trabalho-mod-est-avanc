@@ -1,5 +1,5 @@
 ###Carregando os dados
-setwd("E:/MBA FGV/Modelagem Estatística Avançada")
+setwd("E:/MBA/08 - Modelagem Estatística Avançada/mba-fgv-trabalho-mod-est-avanc-master")
 install.packages("readxl")
 library(readxl)
 dados = read_xlsx("Dados_trabalho_1.xlsx")
@@ -126,3 +126,19 @@ plot(componentes$EN_ATM_CO2E_KT, anares)
 abline(0,0)
 qqnorm(anares)
 qqline(anares)
+
+#Medida ACI de qualidade do ajuste
+AIC(mod)
+
+#Testando hipóteses de normalidade da variável resposta Emissões de CO2
+hist(componentes$EN_ATM_CO2E_KT)
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=pnorm, alternative = c("two.sided", "less", "greater"),exact = NULL) #Rejeitada hipótese de normalidade
+ad.test(componentes$EN_ATM_CO2E_KT)
+shapiro.test(componentes$EN_ATM_CO2E_KT)
+#A normalidade foi rejeitada no teste Kolmogorov-Smirnov, mas não nos testes Anderson-Darling e Shapiro.
+
+
+#Testando hipóteses de outras distribuições da variável resposta Emissões de CO2
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=pchisq, df=47, alternative = c("two.sided", "less", "greater"),exact = NULL)
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=ppois, lambda=0.5, alternative = c("two.sided", "less", "greater"),exact = NULL)
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=pgamma, shape=, alternative = c("two.sided", "less", "greater"),exact = NULL)

@@ -13,8 +13,11 @@ library(readxl)
 library(factoextra)
 #install.packages("bindrcpp")
 library(bindrcpp)
-
+#install.packages("ggplot2")
 library(ggplot2)
+#install.packages("nortest")
+library(nortest)
+
 ```
 
 #Carregando os dados
@@ -22,7 +25,7 @@ library(ggplot2)
 
 ```{r}
 #setwd("E:/MBA FGV/Modelagem Estatística Avançada")
-setwd("C:/Users/ameri/source/github/americofreitasjr/mba-fgv-trabalho-mod-est-avanc")
+setwd("E:/MBA/08 - Modelagem Estatística Avançada/mba-fgv-trabalho-mod-est-avanc-master")
 dados = read_xlsx("Dados_trabalho_1.xlsx")
 dados = data.frame(dados)
 
@@ -177,4 +180,27 @@ plot(componentes$EN_ATM_CO2E_KT, anares)
 abline(0,0)
 qqnorm(anares)
 qqline(anares)
+```
+
+
+
+###Medida ACI de qualidade do ajuste
+```{r}
+AIC(mod)
+```
+
+###Testando hipóteses de normalidade da variável resposta Emissões de CO2
+```{r}
+hist(componentes$EN_ATM_CO2E_KT)
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=pnorm, alternative = c("two.sided", "less", "greater"),exact = NULL) #Rejeitada hipótese de normalidade
+ad.test(componentes$EN_ATM_CO2E_KT)
+shapiro.test(componentes$EN_ATM_CO2E_KT)
+```
+###A normalidade foi rejeitada no teste Kolmogorov-Smirnov, mas não nos testes Anderson-Darling e Shapiro.
+
+###Testando hipóteses de outras distribuições da variável resposta Emissões de CO2
+```{r}
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=pchisq, df=47, alternative = c("two.sided", "less", "greater"),exact = NULL)
+ks.test(x=componentes$EN_ATM_CO2E_KT, y=ppois, lambda=0.5, alternative = c("two.sided", "less", "greater"),exact = NULL)
+#ks.test(x=componentes$EN_ATM_CO2E_KT, y=pgamma, shape=, alternative = c("two.sided", "less", "greater"),exact = NULL)
 ```
