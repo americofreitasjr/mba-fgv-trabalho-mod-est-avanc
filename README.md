@@ -15,6 +15,6 @@
 
 - http://wiki.icmc.usp.br/images/b/b5/Factanalysis.pdf
 
-###Autores
+### Autores
 - Americo Freitas
 - Matheus Motta
