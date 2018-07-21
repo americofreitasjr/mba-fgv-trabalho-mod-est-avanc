@@ -2,6 +2,8 @@
 
 ## Trabalho de modelagem sobre emissão de CO2
 
+ - [Preview da Versão Final](http://htmlpreview.github.io/?https://github.com/americofreitasjr/mba-fgv-trabalho-mod-est-avanc/blob/master/Trabalho1-final-v2.html)
+
 ### Passos
 
 - Selecionar as variáveis explicativas
