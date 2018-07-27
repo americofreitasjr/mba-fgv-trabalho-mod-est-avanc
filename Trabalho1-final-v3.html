@@ -125,7 +125,7 @@ $(document).ready(function () {
 
 
 <div id="analise-exploratoria-dos-dados" class="section level1">
-<h1>Análise exploratoria dos dados</h1>
+<h1>Análise exploratória dos dados</h1>
 <div id="carregando-os-dados" class="section level2">
 <h2>Carregando os dados</h2>
 <pre class="r"><code>dados = read_xlsx(&quot;Dados_trabalho_1.xlsx&quot;)
@@ -162,7 +162,7 @@ for (i in (1:ncol(dados_temp))) {
 </div>
 <div id="listando-variaveis-com-mais-de-20-niveis" class="section level2">
 <h2>Listando variáveis com mais de 20 níveis</h2>
-<pre class="r"><code>variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
+<pre style="max-height: 350px; overflow-x: auto;" class="r"><code>variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
 names(variaveis) = c(&quot;Coluna&quot;,&quot;Classe&quot;,&quot;Niveis&quot;)
 variaveis_explicativas = variaveis[-379,]
 ind = variaveis_explicativas$Niveis &gt; 20
@@ -259,7 +259,7 @@ summary(acomp)</code></pre>
 <h3>Entendendo a relação das variáveis iniciais com os Componentes</h3>
 <pre class="r"><code>res.var &lt;- get_pca_var(acomp)
 res.var$coord          # Coordenadas</code></pre>
-<pre><code>##                                  Dim.1         Dim.2         Dim.3
+<pre style="max-height: 350px; overflow-x: auto;"><code>##                                  Dim.1         Dim.2         Dim.3
 ## AG_AGR_TRAC_NO             0.185442343 -0.8969051335 -4.846777e-02
 ## AG_LND_AGRI_K2             0.623148204 -0.4593621688  2.873067e-01
 ## AG_LND_AGRI_ZS             0.623148204 -0.4593621688  2.873067e-01
@@ -13978,7 +13978,7 @@ res.var$coord          # Coordenadas</code></pre>
 ## TX_VAL_TECH_CD             1.531553e-04  1.033664e-16
 ## TX_VAL_TECH_MF_ZS          1.127344e-04 -1.139648e-17</code></pre>
 <pre class="r"><code>res.var$contrib        # Contribuições para os Componentes Principais</code></pre>
-<pre><code>##                                  Dim.1        Dim.2        Dim.3
+<pre style="max-height: 350px; overflow-x: auto;"><code>##                                  Dim.1        Dim.2        Dim.3
 ## AG_AGR_TRAC_NO            1.027609e-02 8.617234e-01 4.906522e-03
 ## AG_LND_AGRI_K2            1.160360e-01 2.260400e-01 1.724087e-01
 ## AG_LND_AGRI_ZS            1.160360e-01 2.260400e-01 1.724087e-01
@@ -27701,7 +27701,7 @@ res.var$coord          # Coordenadas</code></pre>
 <h3>Entendendo a relação dos registros com os Componentes</h3>
 <pre class="r"><code>res.ind &lt;- get_pca_ind(acomp)
 res.ind$coord          # Coordenadas</code></pre>
-<pre><code>##         Dim.1       Dim.2       Dim.3       Dim.4       Dim.5        Dim.6
+<pre style="max-height: 350px; overflow-x: auto;"><code>##         Dim.1       Dim.2       Dim.3       Dim.4       Dim.5        Dim.6
 ## 1  -22.219361   8.7702975  -7.4493503  0.73410202 -0.82406575   3.03616303
 ## 2  -21.957175   9.2364288  -6.1442348 -3.24304620  0.10385771   4.59762815
 ## 3  -21.700927   8.4864877  -6.1914778 -2.81417196  0.71196733   5.01445654
@@ -28329,7 +28329,7 @@ res.ind$coord          # Coordenadas</code></pre>
 ## 55  3.896499e-03  7.872985e-05 -0.0006480812  4.672911e-15
 ## 56  1.965857e-04 -4.946273e-03  0.0058099635  1.312275e-14</code></pre>
 <pre class="r"><code>res.ind$contrib        # Contribuições para os Componentes Principais</code></pre>
-<pre><code>##          Dim.1        Dim.2       Dim.3        Dim.4        Dim.5
+<pre style="max-height: 350px; overflow-x: auto;"><code>##          Dim.1        Dim.2       Dim.3        Dim.4        Dim.5
 ## 1  2.634419951 1.471348e+00 2.069742867 2.891569e-02 4.063754e-02
 ## 2  2.572614890 1.631905e+00 1.408040699 5.643221e-01 6.454776e-04
 ## 3  2.512918684 1.377662e+00 1.429776775 4.249345e-01 3.033359e-02

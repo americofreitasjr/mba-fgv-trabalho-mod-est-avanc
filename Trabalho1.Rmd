@@ -4,6 +4,7 @@ output:
   pdf_document: default
 ---
 
+# Análise exploratoria dos dados
 
 ```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 # Carregando as bibliotecas necessárias para a análise do modelo
@@ -20,37 +21,32 @@ library(nortest)
 
 ```
 
-#Carregando os dados
-
+## Carregando os dados
 
 ```{r}
-#setwd("E:/MBA FGV/Modelagem Estatística Avançada")
-setwd("E:/MBA/08 - Modelagem Estatística Avançada/mba-fgv-trabalho-mod-est-avanc-master")
 dados = read_xlsx("Dados_trabalho_1.xlsx")
 dados = data.frame(dados)
-
 ```
 
-##Carregando tabela de referência das variáveis
+## Carregando tabela de referência das variáveis
+
 ```{r}
 dados_dictionary = read_xlsx("Referência_variaveis.xlsx")
 dados_dictionary = data.frame(dados_dictionary)
 ```
 
+## Transformando N/A em zero
 
-###Como a base tinha muitos registros vazios, decidimos substituir os N/A por zero para facilitar a modelagem.
-
-##Transformando N/A em zero
+Como a base tinha muitos registros vazios, decidimos substituir os N/A por zero para facilitar a modelagem.
  
 ```{r}
 dados_sem_na <- dados[-1]
 dados_sem_na[is.na(dados_sem_na)] <- 0
 ```
-###Na primeira tentativa de rodar um modelo linear com os dados, recebemos como resultado o erro de que havia variáveis com singularidades, o que não era permitido pelo modelo.
-###Pesquisando, vimos que esse ocorre quando há variáveis explicativas que tem poucos valores únicos, e consequentemente pouca variabilidade.
-###Por esse motivo, decidimos selecionar variáveis a partir de um critério de quantidade de valores únicos: variáveis com mais de 20 valores únicos.
 
-##Analisando a qtd de níveis das variáveis
+## Analisando a qtd de observações distintas das variáveis
+
+Na primeira tentativa de rodar um modelo linear com os dados, recebemos como resultado o erro de que havia variáveis com singularidades, o que não era permitido pelo modelo. Pesquisando, vimos que esse ocorre quando há variáveis explicativas que tem poucos valores únicos, e consequentemente pouca variabilidade. Por esse motivo, decidimos selecionar variáveis a partir de um critério de quantidade de valores únicos: variáveis com mais de 20 valores únicos.
 
 ```{r}
 dados_temp = data.frame(rep(NA,nrow(dados)))
@@ -69,7 +65,7 @@ for (i in (1:ncol(dados_temp))) {
 }
 ```
 
-##Listando variáveis com mais de 20 níveis
+## Listando variáveis com mais de 20 níveis
 
 ```{r}
 variaveis = data.frame(names(dados),classe_variaveis,niveis_variaveis)
@@ -100,29 +96,29 @@ dados_relevantes <- dados_sem_na[,cols]
 
 ```
 
-###Com esse método, ficamos com 721 variáveis explicativas passíveis de entrar no modelo, e o modelo linear passou a rodar.
-###No entanto, no summary do modelo vimos que boa parte das variáveis explicativas ficaram com N/A em parâmetro estimado, Desvio Padrão e Teste t.
-###Por esse motivo, decidimos avançar com uma abordagem mais sofisticada para redução de dimensionalidade.
-###A técnica escolhida foi a Análise de Componentes Principais. Este método agrupa variáveis a partir de sua covariâncias, gerando combinações lineares das variáveis, que se chamam Componentes Principais.
+## Análise de componentes principais
 
-##Análise de componentes principais
+Selecionando apenas as vaiáveis com mais de vinte observações distintas, ficamos com 721 variáveis explicativas passíveis de entrar no modelo, e o modelo linear passou a rodar. No entanto, no summary do modelo vimos que boa parte das variáveis explicativas ficaram com N/A em parâmetro estimado, Desvio Padrão e Teste t. Por esse motivo, decidimos avançar com uma abordagem mais sofisticada para redução de dimensionalidade. A técnica escolhida foi a Análise de Componentes Principais. Este método agrupa variáveis a partir de sua covariâncias, gerando combinações lineares das variáveis, que se chamam Componentes Principais.
 
 ```{r}
 acomp <- prcomp(dados_relevantes, scale = TRUE)
 summary(acomp)
 ```
 
-###Interpretando os componentes principais
-###http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/
+## Interpretando os componentes principais
 
-###Visualização do percentual de variância explicada por cada Componente
+- [Artigo Referência](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/)
+
+### Visualização do percentual de variância explicada por cada Componente
 
 ```{r}
 fviz_eig(acomp)
 ```
 
-###Visualização do grau de associação de cada registro com os primeiros dois Componentes
-###Como cada registro é de um ano, o registro 1 representa o ano 1960 e consecutivamente até o resgistro 56, que representa o ano 2005.
+### Visualização do grau de associação de cada registro com os primeiros dois Componentes
+
+Como cada registro é de um ano, o registro 1 representa o ano 1960 e consecutivamente até o resgistro 56, que representa o ano 2005.
+
 ```{r}
 fviz_pca_ind(acomp,
              col.ind = "cos2", # Color by the quality of representation
@@ -131,21 +127,21 @@ fviz_pca_ind(acomp,
 )
 ```
 
-##Entendendo a relação das variáveis iniciais com os Componentes
+### Entendendo a relação das variáveis iniciais com os Componentes
 ```{r}
 res.var <- get_pca_var(acomp)
 res.var$coord          # Coordenadas
 res.var$contrib        # Contribuições para os Componentes Principais
 ```
 
-##Entendendo a relação dos registros com os Componentes
+### Entendendo a relação dos registros com os Componentes
 ```{r}
 res.ind <- get_pca_ind(acomp)
 res.ind$coord          # Coordenadas
 res.ind$contrib        # Contribuições para os Componentes Principais
 ```
 
-##Modelo Linear com a variável Emissões de CO2 explicada pelas componentes principais
+## Modelo Linear com a variável Emissões de CO2 explicada pelas componentes principais
 ```{r}
 componentes <- data.frame(dados_sem_na$EN_ATM_CO2E_KT,acomp$x)
 nomes <- NULL
@@ -157,9 +153,10 @@ mod=lm(EN_ATM_CO2E_KT ~ PC1+PC2+PC4+PC5+PC7+PC9+PC10+PC13, data = componentes)
 summary(mod)
 ```
 
-##Análise de resíduos
+## Análise de resíduos
 
-###Podemos ver que os resíduos se encontram aleatoriamente distribuidos em relação à variável resposta e também às variáveis explicativas
+### Podemos ver que os resíduos se encontram aleatoriamente distribuidos em relação à variável resposta e também às variáveis explicativas
+
 ```{r}
 anares<-rstandard(mod)
 par(mfrow=c(1,1))
@@ -173,7 +170,7 @@ plot(componentes$PC10, anares);abline(0,0)
 plot(componentes$PC13, anares);abline(0,0)
 ```
 
-###Também é possível ver que os resíduos atendem ao pressuposto de normalidade
+### Também é possível ver que os resíduos atendem ao pressuposto de normalidade
 
 ```{r}
 plot(componentes$EN_ATM_CO2E_KT, anares)
@@ -182,25 +179,26 @@ qqnorm(anares)
 qqline(anares)
 ```
 
+## Medida ACI de qualidade do ajuste
 
-
-###Medida ACI de qualidade do ajuste
 ```{r}
 AIC(mod)
 ```
 
-###Testando hipóteses de normalidade da variável resposta Emissões de CO2
+## Testando hipóteses de normalidade da variável resposta Emissões de CO2
+
 ```{r}
 hist(componentes$EN_ATM_CO2E_KT)
 ks.test(x=componentes$EN_ATM_CO2E_KT, y=pnorm, alternative = c("two.sided", "less", "greater"),exact = NULL) #Rejeitada hipótese de normalidade
 ad.test(componentes$EN_ATM_CO2E_KT)
 shapiro.test(componentes$EN_ATM_CO2E_KT)
 ```
-###A normalidade foi rejeitada no teste Kolmogorov-Smirnov, mas não nos testes Anderson-Darling e Shapiro.
 
-###Testando hipóteses de outras distribuições da variável resposta Emissões de CO2
+A normalidade foi rejeitada no teste Kolmogorov-Smirnov, mas não nos testes Anderson-Darling e Shapiro.
+
+## Testando hipóteses de outras distribuições da variável resposta Emissões de CO2
+
 ```{r}
 ks.test(x=componentes$EN_ATM_CO2E_KT, y=pchisq, df=47, alternative = c("two.sided", "less", "greater"),exact = NULL)
 ks.test(x=componentes$EN_ATM_CO2E_KT, y=ppois, lambda=0.5, alternative = c("two.sided", "less", "greater"),exact = NULL)
-#ks.test(x=componentes$EN_ATM_CO2E_KT, y=pgamma, shape=, alternative = c("two.sided", "less", "greater"),exact = NULL)
 ```
